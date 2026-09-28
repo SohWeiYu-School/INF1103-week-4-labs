@@ -72,7 +72,8 @@ def main():
     """
 
     # local variables
-    inventory = []
+    inventory, transaction_history = load_inventory()
+    current_total = sum(transaction_history)
     tax_amount = 0
     exit_program = False
     failed_attempts = 0
@@ -82,18 +83,19 @@ def main():
         if response == "Invalid":
             failed_attempts+=1
         elif response == "quit":
-            generate_report(inventory, failed_attempts)
+            save_inventory(inventory, transaction_history)
+            generate_report(current_total, failed_attempts)
             exit_program = True
         else:
             # overstock check goes here, before updating inventory                                                                                
-            if inventory + response > MAX_CAPACITY:                                                                                               
-                failed_attempts += 1                                                                                                              
-                print("Overstock alert! You cannot add " + str(response) + " items. Maximum capacity is " + str(MAX_CAPACITY) + ".")    
-                exit_program = True          
-            else:                                                                                                                                 
-                inventory = process_delivery(inventory, response)                                                                                 
-                tax_amount = calculate_tax(inventory)                                                                                             
-                print("Added " + str(response) + " items. Total: " + str(inventory) + " Tax: $" + str(tax_amount))          
+            if current_total + response > MAX_CAPACITY:
+                failed_attempts += 1
+                print("Overstock alert! You cannot add " + str(response) + " items. Maximum capacity is " + str(MAX_CAPACITY) + ".")
+            else:
+                current_total = process_delivery(current_total, response)
+                transaction_history.append(response)
+                tax_amount = calculate_tax(current_total)
+                print("Added " + str(response) + " items. Total: " + str(current_total) + " Tax: $" + str(tax_amount))          
 
 # __name__ (Program Entry Point)
 if  __name__=="__main__":
