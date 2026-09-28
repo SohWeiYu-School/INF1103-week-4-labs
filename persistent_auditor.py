@@ -3,33 +3,42 @@ INF1103 Week 4 - Persistent Auditor
 """
 
 #Global Constant
+EXIT_SIGNAL = -99
 MAX_CAPACITY = 500
 TAX_RATE = 0.1 # 10% tax rate
 INVENTORY_FILE = "inventory.txt"
 
+# Inventory item structure
+ITEM_FIELDS = {
+ "id": 0,
+ "name": 1,
+ "quantity": 2,
+ "transaction_history": 3
+}
+FIELD_SEPARATOR = ","
+HISTORY_SEPARATOR = "|"
+
 # Load the saved inventory, transaction history
 def load_inventory():
     inventory=[]
+    transaction_history = []
     try: 
         with open("inventory.txt", "r") as f:
             for line in f: #Read file one line at a time
-                parts = line.strip().split(",")
-                order = (int(parts[0]),parts[1],int(parts[2]))
-                inventory.append(order)
-            last_id = inventory[-1][0]                                                                                 
-            return inventory, last_id  
+                parts = line.strip().split(FIELD_SEPARATOR)
+                history= list(map(int, parts[3].split(HISTORY_SEPARATOR)))  
+                item = (int(parts[0]), parts[1], int(parts[2]), history)                         
+                inventory.append(item)                                                           
+                transaction_history.extend(history)                                                                                      
+            return inventory, transaction_history  
     except FileNotFoundError:
-        return [],1000
+        return [], []
     
-def save_inventory(inventory):
-    with open("inventory.txt", "w") as f:
-        for order in inventory:
-            f.writes(str(order[0]) + "," + order[1] + "," + str(order[2]) + "\n")
-
-
-# Write inventory, transaction history.
 def save_inventory(inventory, transaction_history):
-    return None #return nothing
+      with open(INVENTORY_FILE, "w") as f:
+          for item in inventory:
+              history_str = HISTORY_SEPARATOR.join(str(x) for x in item[3])
+              f.write(str(item[0]) + FIELD_SEPARATOR + item[1] + FIELD_SEPARATOR + str(item[2]) + FIELD_SEPARATOR + history_str + "\n")
 
 def get_valid_input():
     userInput = input("Enter stock quantity or 'quit' to exit: ")
@@ -62,7 +71,7 @@ def main():
     """
 
     # local variables
-    inventory = 0
+    inventory = []
     tax_amount = 0
     exit_program = False
     failed_attempts = 0
