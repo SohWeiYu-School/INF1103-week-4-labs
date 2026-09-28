@@ -1,2 +1,2 @@
-350                                                                                                             
-100,50,200 
+1001,Wireless Mouse,2
+1002,Keyboard,1 
