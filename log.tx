@@ -1,0 +1,47 @@
+commit 4fdcd3ef23a3cab61f7469f50173063bcdad89f4
+Author: SohWeiYu-School <2603216@sit.singaporetech.edu.sg>
+Date:   Mon Sep 28 20:45:31 2026 +0800
+
+    Update inventory quantities and improve user prompts in persistent auditor
+
+commit 6d5b8735ee456503ccefe1ebf9ccbc803c34bad9
+Author: SohWeiYu-School <2603216@sit.singaporetech.edu.sg>
+Date:   Mon Sep 28 20:40:50 2026 +0800
+
+    Update inventory quantities and enhance transaction history handling in persistent auditor
+
+commit 462c0a719852fd21483d3a70b561b9ee45d1349e
+Author: SohWeiYu-School <2603216@sit.singaporetech.edu.sg>
+Date:   Mon Sep 28 20:36:46 2026 +0800
+
+    Refactor main function to improve inventory handling and save transaction history
+
+commit 54d2c106e6d7301bcc6b4f160473c3144f884641
+Author: SohWeiYu-School <2603216@sit.singaporetech.edu.sg>
+Date:   Mon Sep 28 20:27:43 2026 +0800
+
+    Update inventory file format and enhance save_inventory function to include total quantity and transaction history
+
+commit b083972059c5734f9a0baa9a70a6bc8691a3e358
+Author: SohWeiYu-School <2603216@sit.singaporetech.edu.sg>
+Date:   Mon Sep 28 20:23:11 2026 +0800
+
+    Refactor inventory loading and saving logic to include transaction history
+
+commit 6a3a7deadf6901af2503e64c6777efa22f1f7dd3
+Author: SohWeiYu-School <2603216@sit.singaporetech.edu.sg>
+Date:   Mon Sep 28 20:14:47 2026 +0800
+
+    Refactor inventory handling in persistent auditor and update file structure
+
+commit 2012a967083807f50c939ee364cc6d5487369e73
+Author: SohWeiYu-School <2603216@sit.singaporetech.edu.sg>
+Date:   Mon Sep 28 19:55:06 2026 +0800
+
+    Add persistent auditor functionality and Docker support
+
+commit a6662a2183fce41219f7cc7521a602f79a712f70
+Author: SohWeiYu-School <2603216@sit.singaporetech.edu.sg>
+Date:   Mon Sep 28 19:25:33 2026 +0800
+
+    initial commit
