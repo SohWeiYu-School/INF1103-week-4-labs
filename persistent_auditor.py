@@ -2,9 +2,22 @@
 INF1103 Week 4 - Persistent Auditor
 """
 
+
+
 #Global Constant
 MAX_CAPACITY = 500
 TAX_RATE = 0.1 # 10% tax rate
+INVENTORY_FILE = "inventory.txt"
+
+# Load the saved inventory, transaction history
+def load_inventory():
+    try: 
+        with open("inventory.txt", "r") as f:
+            total = int(f.readline()) #read total
+            history = list(map(int, f.readline().split(","))) #read history
+        return total, history
+    except FileNotFoundError:
+        return 0, []
 
 def get_valid_input():
     userInput = input("Enter stock quantity or 'quit' to exit: ")
