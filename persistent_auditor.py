@@ -20,26 +20,27 @@ HISTORY_SEPARATOR = "|"
 
 # Load the saved inventory, transaction history
 def load_inventory():
-    inventory=[]
-    transaction_history = []
-    try: 
-        with open("inventory.txt", "r") as f:
-            for line in f: #Read file one line at a time
+    inventory = []
+    try:
+        with open(INVENTORY_FILE, "r") as f:
+            for line in f:
                 parts = line.strip().split(FIELD_SEPARATOR)
-                history= list(map(int, parts[3].split(HISTORY_SEPARATOR)))  
-                item = (int(parts[0]), parts[1], int(parts[2]), history)                         
-                inventory.append(item)                                                           
-                transaction_history.extend(history)                                                                                      
-            return inventory, transaction_history  
+                history = list(map(int, parts[3].split(HISTORY_SEPARATOR)))
+                item = (int(parts[0]), parts[1], int(parts[2]), history)
+                inventory.append(item)
+        last_id = inventory[-1][0]
+        return inventory, last_id
     except FileNotFoundError:
-        return [], []
+        return [], 1000
     
-def save_inventory(inventory, transaction_history):
-      with open(INVENTORY_FILE, "w") as f:
+def save_inventory(inventory):
+    with open(INVENTORY_FILE, "w") as f:
         for item in inventory:
-            history_str = HISTORY_SEPARATOR.join(str(x) for x in transaction_history)
-            total = sum(transaction_history)
-            f.write(str(item[0]) + FIELD_SEPARATOR + item[1] + FIELD_SEPARATOR + str(total) + FIELD_SEPARATOR + history_str + "\n")
+            history_str = HISTORY_SEPARATOR.join(str(x) for x in item[3])
+            f.write(str(item[0]) + FIELD_SEPARATOR + item[1] + FIELD_SEPARATOR + str(item[2]) + FIELD_SEPARATOR + history_str + "\n")
+
+def get_product_name():
+    return input("Enter Product Name (or 'quit' to exit): ")
 
 def get_valid_input():
     userInput = input("Enter stock quantity or 'quit' to exit: ")
@@ -70,32 +71,52 @@ def main():
     """
     Main function to run inventory auditor program.
     """
-
-    # local variables
-    inventory, transaction_history = load_inventory()
-    current_total = sum(transaction_history)
+    inventory, last_id = load_inventory()
     tax_amount = 0
     exit_program = False
     failed_attempts = 0
-    while not exit_program:
 
-        response = get_valid_input()
-        if response == "Invalid":
-            failed_attempts+=1
-        elif response == "quit":
-            save_inventory(inventory, transaction_history)
-            generate_report(current_total, failed_attempts)
+    print("Current Orders:")
+    for item in inventory:
+        print(str(item[0]) + ", " + item[1] + ", " + str(item[2]))
+
+    while not exit_program:
+        name = get_product_name()
+        if name == "quit":
+            save_inventory(inventory)
+            total_units = sum(item[2] for item in inventory)
+            generate_report(total_units, failed_attempts)
             exit_program = True
         else:
-            # overstock check goes here, before updating inventory                                                                                
-            if current_total + response > MAX_CAPACITY:
+            response = get_valid_input()
+            if response == "Invalid":
                 failed_attempts += 1
-                print("Overstock alert! You cannot add " + str(response) + " items. Maximum capacity is " + str(MAX_CAPACITY) + ".")
+            elif response == "quit":
+                save_inventory(inventory)
+                total_units = sum(item[2] for item in inventory)
+                generate_report(total_units, failed_attempts)
+                exit_program = True
             else:
-                current_total = process_delivery(current_total, response)
-                transaction_history.append(response)
-                tax_amount = calculate_tax(current_total)
-                print("Added " + str(response) + " items. Total: " + str(current_total) + " Tax: $" + str(tax_amount))          
+                found = False
+                for i, item in enumerate(inventory):
+                    if item[1].lower() == name.lower():
+                        if item[2] + response > MAX_CAPACITY:
+                            failed_attempts += 1
+                            print("Overstock alert! You cannot add " + str(response) + " items. Maximum capacity is " + str(MAX_CAPACITY) + ".")
+                        else:
+                            updated = (item[0], item[1], item[2] + response, item[3] + [response])
+                            inventory[i] = updated
+                            tax_amount = calculate_tax(updated[2])
+                            print("Added " + str(response) + " to " + name + ". Total: " + str(updated[2]) + " Tax: $" + str(tax_amount))
+                        found = True
+                        break
+                if not found:
+                    last_id += 1
+                    new_item = (last_id, name, response, [response])
+                    inventory.append(new_item)
+                    tax_amount = calculate_tax(response)
+                    print("New Order Added:")
+                    print(str(last_id) + "," + name + "," + str(response))
 
 # __name__ (Program Entry Point)
 if  __name__=="__main__":
