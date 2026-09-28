@@ -40,10 +40,10 @@ def save_inventory(inventory):
             f.write(str(item[0]) + FIELD_SEPARATOR + item[1] + FIELD_SEPARATOR + str(item[2]) + FIELD_SEPARATOR + history_str + "\n")
 
 def get_product_name():
-    return input("Enter Product Name (or 'quit' to exit): ")
+    return input("Enter Product Name: ")
 
 def get_valid_input():
-    userInput = input("Enter stock quantity or 'quit' to exit: ")
+    userInput = input("Enter Quantity: ")
 
     if userInput == "quit":
         return "quit"
@@ -76,9 +76,10 @@ def main():
     exit_program = False
     failed_attempts = 0
 
-    print("Current Orders:")
+    print("Current Orders:\n")
     for item in inventory:
         print(str(item[0]) + ", " + item[1] + ", " + str(item[2]))
+    print("")
 
     while not exit_program:
         name = get_product_name()
@@ -114,9 +115,10 @@ def main():
                     last_id += 1
                     new_item = (last_id, name, response, [response])
                     inventory.append(new_item)
-                    tax_amount = calculate_tax(response)
-                    print("New Order Added:")
+                    save_inventory(inventory)
+                    print("\nNew Order Added:")
                     print(str(last_id) + "," + name + "," + str(response))
+                    print("\nOrder successfully saved to inventory.txt")
 
 # __name__ (Program Entry Point)
 if  __name__=="__main__":

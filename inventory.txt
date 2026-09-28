@@ -1,3 +1,4 @@
 1001,Wireless Mouse,30,5|10|5|10
-1002,Keyboard,20,5|5|10
+1002,Keyboard,40,5|5|10|20
 1003,USB Cable,30,5|5|10|5|5
+1004,Laptop,20,20
