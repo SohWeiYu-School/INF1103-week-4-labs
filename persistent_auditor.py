@@ -36,9 +36,10 @@ def load_inventory():
     
 def save_inventory(inventory, transaction_history):
       with open(INVENTORY_FILE, "w") as f:
-          for item in inventory:
-              history_str = HISTORY_SEPARATOR.join(str(x) for x in item[3])
-              f.write(str(item[0]) + FIELD_SEPARATOR + item[1] + FIELD_SEPARATOR + str(item[2]) + FIELD_SEPARATOR + history_str + "\n")
+        for item in inventory:
+            history_str = HISTORY_SEPARATOR.join(str(x) for x in transaction_history)
+            total = sum(transaction_history)
+            f.write(str(item[0]) + FIELD_SEPARATOR + item[1] + FIELD_SEPARATOR + str(total) + FIELD_SEPARATOR + history_str + "\n")
 
 def get_valid_input():
     userInput = input("Enter stock quantity or 'quit' to exit: ")
